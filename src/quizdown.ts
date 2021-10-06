@@ -6,9 +6,9 @@ import type { Quiz } from './quiz';
 
 export interface Quizdown {
     register(extension: QuizdownExtension): Quizdown;
-    createApp(rawQuizdown: string, node: Element, config: Config): App;
-    parseQuizdown(rawQuizdown: string, config: Config): Quiz;
-    init(config: object): void;
+    createApp(rawQuizdown: string, node: Element, config: Config ,finFun:(n:number[])=>void,sel:[number[]]): App;
+    parseQuizdown(rawQuizdown: string, config: Config,finFun:(n:number[])=>void): Quiz;
+    init(config: object,finFun:(n:number[])=>void,sel:[number[]]): void;
     getMarkedParser(): typeof marked;
 }
 
@@ -21,7 +21,7 @@ function register(extension: QuizdownExtension): Quizdown {
     return this as Quizdown;
 }
 
-function createApp(rawQuizdown: string, node: Element, config: Config): App {
+function createApp(rawQuizdown: string, node: Element, config: Config,finFun:(n:number[])=>void = (n)=>{console.log(n)},sel:[number[]]=[[]] ): App {
     node.innerHTML = '';
     let root: ShadowRoot;
     if (!!node.shadowRoot) {
@@ -32,7 +32,14 @@ function createApp(rawQuizdown: string, node: Element, config: Config): App {
         root = node.attachShadow({ mode: 'open' });
     }
     try {
-        let quiz = parseQuizdown(rawQuizdown, config);
+        let quiz = parseQuizdown(rawQuizdown, config,finFun);
+        if(quiz.questions.length==sel.length){
+            for(let i=0;i<sel.length;i++){
+                quiz.questions[i].selected=sel[i]; 
+            }
+        }else{
+            console.log('incorect size');
+        }
         let app = new App({
             // https://github.com/sveltejs/svelte/pull/5870
             target: root,
@@ -47,7 +54,7 @@ function createApp(rawQuizdown: string, node: Element, config: Config): App {
     }
 }
 
-function init(config: object = {}): void {
+function init(config: object = {},finFun:(n:number[])=>void,sel:[number[]]=[[]]): void {
     let globalConfig = new Config(config);
     if (globalConfig.startOnLoad) {
         if (typeof document !== 'undefined') {
@@ -56,7 +63,7 @@ function init(config: object = {}): void {
                 function () {
                     let nodes = document.querySelectorAll('.quizdown');
                     for (let node of nodes) {
-                        createApp(node.innerHTML, node, globalConfig);
+                        createApp(node.innerHTML, node, globalConfig,finFun,sel);
                     }
                 },
                 false

@@ -54,7 +54,7 @@
         node.style.minHeight = `${minHeight}px`;
     });
 </script>
-
+<svelte:options accessors/>
 <div class="quizdown-content" bind:this="{node}">
     <Card>
         <ProgressBar value="{$index}" max="{quiz.questions.length - 1}" />
@@ -126,7 +126,7 @@
                     >
                 </Row>
 
-                <Credits />
+                <!--Credits /-->
             </Container>
         </Loading>
     </Card>

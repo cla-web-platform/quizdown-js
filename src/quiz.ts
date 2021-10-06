@@ -179,8 +179,8 @@ export class Quiz {
     onFirst: Writable<boolean>;
     isEvaluated: Writable<boolean>;
     allVisited: Writable<boolean>;
-
-    constructor(questions, config: Config) {
+    finFun:(n:number[])=>void;
+    constructor(questions, config: Config,fin:(n:number[])=>void) {
         if (questions.length == 0) {
             throw 'No questions for quiz provided';
         }
@@ -198,6 +198,7 @@ export class Quiz {
         this.onFirst = writable(true);
         this.allVisited = writable(questions.length == 1);
         this.isEvaluated = writable(false);
+        this.finFun=fin;
         autoBind(this);
     }
 
@@ -258,6 +259,7 @@ export class Quiz {
     evaluate(): number {
         var points = 0;
         for (var q of this.questions) {
+            this.finFun(q.selected);
             if (q.isCorrect()) {
                 points += 1;
             }
