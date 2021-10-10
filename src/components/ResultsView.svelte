@@ -40,6 +40,32 @@
                         {emojis[+question.solved]}
                         {@html question.text}
                     </span>
+                    <br/>
+                    <span>
+                        {#if !question.solved && question.selected.length>0}
+                            <span style="padding-left: 10px;">your answer(s): <br/> </span>
+                            {#each question.selected as selected}
+                            
+                                <li style="padding-left: 20px;">
+                                    {@html question.answers[selected].html}
+                                    <br/>
+                                </li>
+                           
+                            {/each}
+                            <br/>
+                        {/if}
+
+                        <span style="padding-left: 10px;"> the correct answer(s): <br> </span>
+                        {#each question.answers as ans}
+                            {#if ans.correct}
+                                <li style="padding-left: 20px;">
+                                    {@html ans.html}
+                                    <br/>
+                                </li>
+                            {/if}
+                        {/each}
+
+                    </span>
                     <ol>
                         <!-- answer comments when selected and available -->
                         {#each question.selected as selected}
