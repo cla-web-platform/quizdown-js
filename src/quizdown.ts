@@ -6,9 +6,9 @@ import type { Quiz } from './quiz';
 
 export interface Quizdown {
     register(extension: QuizdownExtension): Quizdown;
-    createApp(rawQuizdown: string, node: Element, config: Config ,finFun:(n:number[])=>void,sel:[number[]]): App;
-    parseQuizdown(rawQuizdown: string, config: Config,finFun:(n:number[])=>void): Quiz;
-    init(config: object,finFun:(n:number[])=>void,sel:[number[]]): void;
+    createApp(rawQuizdown: string, node: Element, config: Config ,finFun:(sel:[number[]],score:number)=>void,sel:[number[]]): App;
+    parseQuizdown(rawQuizdown: string, config: Config,finFun:(sel:[number[]],score:number)=>void): Quiz;
+    init(config: object,finFun:(sel:[number[]],score:number)=>void,sel:[number[]]): void;
     getMarkedParser(): typeof marked;
 }
 
@@ -21,7 +21,7 @@ function register(extension: QuizdownExtension): Quizdown {
     return this as Quizdown;
 }
 
-function createApp(rawQuizdown: string, node: Element, config: Config,finFun:(n:number[])=>void = (n)=>{console.log(n)},sel:[number[]]=[[]] ): App {
+function createApp(rawQuizdown: string, node: Element, config: Config,finFun:(sel:[number[]],score:number)=>void = (a,b)=>{},sel:[number[]]=[[]] ): App {
     node.innerHTML = '';
     let root: ShadowRoot;
     if (!!node.shadowRoot) {
@@ -54,7 +54,7 @@ function createApp(rawQuizdown: string, node: Element, config: Config,finFun:(n:
     }
 }
 
-function init(config: object = {},finFun:(n:number[])=>void,sel:[number[]]=[[]]): void {
+function init(config: object = {},finFun:(sel:[number[]],score:number)=>void= (a,b)=>{},sel:[number[]]=[[]]): void {
     let globalConfig = new Config(config);
     if (globalConfig.startOnLoad) {
         if (typeof document !== 'undefined') {

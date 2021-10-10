@@ -35,7 +35,7 @@ function parseAnswer(item) {
     return { text: text, comment: comment };
 }
 
-function parseQuizdown(rawQuizdown: string, globalConfig: Config,finFun:(n:number[])=>void): Quiz {
+function parseQuizdown(rawQuizdown: string, globalConfig: Config,finFun:(sel:[number[]],score:number)=>void): Quiz {
     let tokens = marked.lexer(htmlDecode(stripIndent(rawQuizdown)));
     let questions: Array<BaseQuestion> = [];
     let header: string = '';
