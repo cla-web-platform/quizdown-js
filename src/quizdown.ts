@@ -38,7 +38,7 @@ function createApp(rawQuizdown: string, node: Element, config: Config,finFun:(se
                 quiz.questions[i].selected=sel[i]; 
             }
         }else{
-            console.log('incorect size');
+            //console.log('incorect size');
         }
         let app = new App({
             // https://github.com/sveltejs/svelte/pull/5870
