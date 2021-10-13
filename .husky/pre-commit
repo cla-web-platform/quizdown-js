@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cp -r ./public/build/ ../cla-student/src/components/Learning/LessonBlock/
